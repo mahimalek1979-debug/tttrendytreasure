@@ -1,0 +1,226 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(10, 10, 10, 0.97);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    transition: all 0.3s;
+}
+
+.navbar.scrolled {
+    box-shadow: 0 2px 20px rgba(212, 175, 55, 0.15);
+}
+
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.logo-icon {
+    background: var(--color-gold);
+    color: var(--color-black);
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.logo-text { font-size: 1rem; }
+
+/* Mobile search - hidden by default, shown below nav */
+.search-bar {
+    display: none;
+}
+
+.nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--color-black);
+    width: 75%;
+    max-width: 280px;
+    height: 100vh;
+    padding: 60px 25px;
+    transition: right 0.35s ease;
+    box-shadow: -5px 0 25px rgba(0,0,0,0.6);
+    z-index: 1001;
+    gap: 25px;
+}
+
+.nav-links.active { right: 0; }
+
+.nav-links li { width: 100%; text-align: left; }
+
+.nav-links a {
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: block;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(212,175,55,0.1);
+}
+
+.nav-links a:hover { color: var(--color-gold); }
+
+.account-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.logout-btn {
+    background: transparent;
+    color: var(--color-gold);
+    padding: 8px 15px;
+    border: 1px solid var(--color-gold);
+    border-radius: 5px;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.nav-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.wishlist-icon {
+    font-size: 1.5rem;
+    color: var(--color-gold);
+    cursor: pointer;
+}
+
+.cart-icon {
+    position: relative;
+    cursor: pointer;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--color-gold);
+    color: var(--color-black);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.mobile-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 1002;
+    padding: 5px;
+}
+
+.mobile-toggle span {
+    width: 22px;
+    height: 2px;
+    background: var(--color-gold);
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+/* Mobile search bar below navbar */
+.mobile-search {
+    display: block;
+    padding: 8px 15px;
+    background: rgba(10,10,10,0.97);
+    border-top: 1px solid rgba(212,175,55,0.1);
+}
+
+.mobile-search form {
+    display: flex;
+    background: var(--color-card-bg);
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+.mobile-search input {
+    flex: 1;
+    padding: 10px 15px;
+    background: transparent;
+    border: none;
+    color: var(--color-white);
+    outline: none;
+    font-size: 0.95rem;
+}
+
+.mobile-search button {
+    padding: 10px 15px;
+    background: var(--color-gold);
+    color: var(--color-black);
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .nav-content { padding: 18px 20px; }
+    .logo { font-size: 1.5rem; }
+    .logo-icon { padding: 8px 12px; font-size: 1rem; }
+    .logo-text { font-size: 1.3rem; }
+
+    .search-bar {
+        display: block;
+        flex: 1;
+        max-width: 400px;
+        margin: 0 30px;
+    }
+
+    .search-bar form {
+        display: flex;
+        background: var(--color-card-bg);
+        border-radius: 25px;
+        overflow: hidden;
+    }
+
+    .search-bar input {
+        flex: 1;
+        padding: 10px 20px;
+        background: transparent;
+        border: none;
+        color: var(--color-white);
+        outline: none;
+    }
+
+    .search-bar button {
+        padding: 10px 20px;
+        background: var(--color-gold);
+        color: var(--color-black);
+    }
+
+    .nav-links {
+        position: static;
+        flex-direction: row;
+        height: auto;
+        width: auto;
+        background: transparent;
+        padding: 0;
+        box-shadow: none;
+        gap: 25px;
+    }
+
+    .nav-links li { width: auto; text-align: center; }
+    .nav-links a { font-size: 1rem; padding: 0; border-bottom: none; }
+    .mobile-toggle { display: none; }
+    .mobile-search { display: none; }
+    .account-nav { flex-direction: row; }
+    .logout-btn { width: auto; }
+}

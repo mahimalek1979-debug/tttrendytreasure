@@ -1,0 +1,105 @@
+.payment-container {
+    min-height: 100vh;
+    padding-top: 120px;
+}
+
+.payment-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.payment-form {
+    background: var(--color-card-bg);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.payment-form h3 { margin-bottom: 20px; }
+
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.payment-method {
+    padding: 15px;
+    background: var(--color-black);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.payment-method.active {
+    border-color: var(--color-gold);
+    background: rgba(212,175,55,0.1);
+}
+
+.card-details { display: flex; flex-direction: column; gap: 12px; }
+
+.card-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.payment-form input {
+    width: 100%;
+    padding: 14px;
+    background: var(--color-black);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 5px;
+    color: var(--color-white);
+    font-size: 1rem;
+}
+
+.payment-form input:focus {
+    outline: none;
+    border-color: var(--color-gold);
+}
+
+.payment-summary {
+    background: var(--color-card-bg);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.payment-summary h3 { margin-bottom: 15px; }
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.9rem;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid var(--color-gold);
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.payment-success {
+    background: rgba(76,175,80,0.2);
+    color: #4caf50;
+    padding: 40px 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.payment-success h2 { color: #4caf50; margin-bottom: 15px; }
+.order-id { color: var(--color-gold); font-size: 1.1rem; margin: 15px 0; }
+
+@media (min-width: 1024px) {
+    .payment-grid { grid-template-columns: 1fr 380px; }
+    .payment-methods { flex-direction: row; }
+}

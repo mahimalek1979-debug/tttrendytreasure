@@ -1,0 +1,55 @@
+.loyalty-card {
+    background: linear-gradient(135deg, #1a1200, #2d1f00);
+    border: 1px solid var(--color-gold);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.loyalty-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.loyalty-header h3 { font-size: 1.1rem; }
+
+.points-badge {
+    background: var(--color-gold);
+    color: var(--color-black);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.loyalty-card p {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+}
+
+.loyalty-tiers {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.tier {
+    background: var(--color-black);
+    padding: 10px 5px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    border: 1px solid transparent;
+    transition: all 0.3s;
+}
+
+.tier.active {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+}
+
+.tier small { display: block; font-size: 0.65rem; margin-top: 3px; }

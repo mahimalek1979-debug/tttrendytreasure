@@ -1,0 +1,110 @@
+.hero {
+    position: relative;
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, #0a0a0a 0%, #1a1200 100%);
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop') center/cover;
+    opacity: 0.1;
+}
+
+.hero-glow {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(212,175,55,0.12) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 40px 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(212,175,55,0.1);
+    border: 1px solid rgba(212,175,55,0.3);
+    color: #D4AF37;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+}
+
+.hero-title {
+    font-size: 1.9rem;
+    line-height: 1.25;
+    color: #fff;
+    margin-bottom: 14px;
+    font-family: 'Playfair Display', serif;
+}
+
+.hero-title .gold { color: #D4AF37; }
+
+.hero-sub {
+    font-size: 0.88rem;
+    color: #999;
+    line-height: 1.7;
+    margin-bottom: 32px;
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 280px;
+    margin: 0 auto 35px;
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    border-top: 1px solid rgba(212,175,55,0.12);
+    padding-top: 25px;
+}
+
+.stat {
+    flex: 1;
+    text-align: center;
+    border-right: 1px solid rgba(212,175,55,0.12);
+}
+
+.stat:last-child { border-right: none; }
+
+.stat-num {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #D4AF37;
+    font-family: 'Playfair Display', serif;
+}
+
+.stat-lbl {
+    font-size: 0.65rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}

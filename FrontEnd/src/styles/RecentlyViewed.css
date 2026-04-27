@@ -1,0 +1,46 @@
+.recently-viewed { background: var(--color-card-bg); }
+
+.recent-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.recent-card {
+    cursor: pointer;
+    text-align: center;
+    background: var(--color-black);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.recent-card:hover { transform: translateY(-3px); }
+
+.recent-card img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+}
+
+.recent-card p {
+    font-size: 0.75rem;
+    padding: 5px 8px 2px;
+    color: var(--color-white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recent-card span {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--color-gold);
+    font-weight: 700;
+    padding-bottom: 8px;
+}
+
+@media (min-width: 768px) {
+    .recent-grid { grid-template-columns: repeat(6, 1fr); }
+    .recent-card img { height: 130px; }
+}

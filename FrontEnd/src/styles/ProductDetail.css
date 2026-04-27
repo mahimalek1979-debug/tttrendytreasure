@@ -1,0 +1,344 @@
+.pd-container {
+    background: #0a0a0a;
+    min-height: 100vh;
+}
+
+.pd-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+}
+
+.pd-back {
+    background: transparent;
+    color: #D4AF37;
+    border: none;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    text-align: left;
+    border-bottom: 1px solid rgba(212,175,55,0.1);
+}
+
+/* Big rectangle main image */
+.pd-main-img {
+    width: 100%;
+    background: #141414;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+}
+
+.pd-main-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 10px;
+}
+
+/* Thumbnails row */
+.pd-thumbnails {
+    display: flex;
+    gap: 8px;
+    padding: 10px 15px;
+    overflow-x: auto;
+    background: #141414;
+    border-bottom: 1px solid #1a1a1a;
+    scrollbar-width: none;
+}
+
+.pd-thumbnails::-webkit-scrollbar { display: none; }
+
+.pd-thumb {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.pd-thumb.active { border-color: #D4AF37; }
+
+.pd-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 3px;
+    background: #1a1a1a;
+}
+
+/* Product Info Section */
+.pd-info {
+    padding: 15px;
+    background: #0a0a0a;
+}
+
+.pd-category {
+    font-size: 0.7rem;
+    color: #D4AF37;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+}
+
+.pd-name {
+    font-size: 1.1rem;
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+
+.pd-price {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #D4AF37;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 5px;
+}
+
+.pd-price-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.pd-original-price {
+    font-size: 1rem;
+    color: #666;
+    text-decoration: line-through;
+}
+
+.pd-discount-badge {
+    background: #4caf50;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.pd-divider {
+    height: 1px;
+    background: rgba(212,175,55,0.1);
+    margin: 15px 0;
+}
+
+.pd-section-title {
+    font-size: 0.9rem;
+    color: #D4AF37;
+    margin-bottom: 10px;
+    font-family: 'Playfair Display', serif;
+}
+
+.pd-description {
+    font-size: 0.85rem;
+    color: #aaa;
+    line-height: 1.8;
+}
+
+/* Quantity */
+.pd-qty-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.pd-qty-label {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.pd-qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.pd-qty-controls button {
+    width: 36px;
+    height: 36px;
+    background: #1a1a1a;
+    color: #D4AF37;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+}
+
+.pd-qty-controls span {
+    width: 40px;
+    text-align: center;
+    font-size: 1rem;
+    color: #fff;
+    background: #141414;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid rgba(212,175,55,0.2);
+    border-right: 1px solid rgba(212,175,55,0.2);
+}
+
+/* Buttons */
+.pd-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.pd-btn-cart {
+    flex: 1;
+    padding: 14px;
+    background: transparent;
+    border: 1.5px solid #D4AF37;
+    color: #D4AF37;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pd-btn-buy {
+    flex: 1;
+    padding: 14px;
+    background: #D4AF37;
+    border: none;
+    color: #0a0a0a;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pd-btn-cart:active, .pd-btn-buy:active { transform: scale(0.97); }
+
+/* Delivery Info */
+.pd-delivery {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* Variant Selection */
+.pd-variants-section {
+    margin: 1.5rem 0;
+}
+
+.pd-variants-label {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    color: #333;
+}
+
+.pd-variants-label strong {
+    color: #000;
+}
+
+.pd-variants-list {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+}
+
+.pd-variant-card {
+    min-width: 100px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.pd-variant-card.active {
+    border-color: #D4AF37;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+    background: #fdfaf0;
+}
+
+.pd-variant-img {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.pd-variant-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pd-variant-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pd-variant-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.pd-variant-price {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #000;
+}
+
+.pd-variant-original {
+    font-size: 0.75rem;
+    text-decoration: line-through;
+    color: #888;
+}
+
+.pd-limited-badge {
+    background: #c00;
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 2px 4px;
+    border-radius: 2px;
+    width: fit-content;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+.pd-delivery-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: #aaa;
+}
+
+.pd-delivery-item span { color: #ccc; }
+
+.loader {
+    border: 3px solid rgba(212,175,55,0.2);
+    border-top: 3px solid #D4AF37;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

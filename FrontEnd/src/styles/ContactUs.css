@@ -1,0 +1,37 @@
+.contact-container {
+    min-height: 100vh;
+    padding-top: 100px;
+}
+
+.contact-content {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.contact-content > p {
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 30px;
+}
+
+.email-btn {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+}
+
+.contact-info {
+    background: var(--color-card-bg);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.contact-info p {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.contact-info strong {
+    color: var(--color-gold);
+}

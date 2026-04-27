@@ -1,0 +1,75 @@
+.order-tracking {
+    background: var(--color-black);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+.order-tracking h4 { margin-bottom: 20px; }
+
+.tracking-steps {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    position: relative;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    min-width: 60px;
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-card-bg);
+    border: 2px solid rgba(212,175,55,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    z-index: 1;
+    transition: all 0.3s;
+}
+
+.step.completed .step-circle {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-black);
+    font-weight: 700;
+}
+
+.step.active .step-circle {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+    box-shadow: 0 0 10px rgba(212,175,55,0.5);
+}
+
+.step p {
+    font-size: 0.7rem;
+    text-align: center;
+    margin-top: 8px;
+    color: var(--color-text-secondary);
+}
+
+.step.completed p, .step.active p { color: var(--color-gold); }
+
+.step-line {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: rgba(212,175,55,0.2);
+    z-index: 0;
+}
+
+.step-line.completed { background: var(--color-gold); }

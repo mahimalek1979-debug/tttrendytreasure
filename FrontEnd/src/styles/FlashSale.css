@@ -1,0 +1,45 @@
+.flash-sale {
+    background: linear-gradient(135deg, #1a0a00, #2d1800);
+    border-bottom: 1px solid rgba(212,175,55,0.3);
+    padding: 8px 15px;
+}
+
+.flash-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.flash-left { display: flex; align-items: center; gap: 8px; }
+
+.flash-badge {
+    background: #D4AF37;
+    color: #0a0a0a;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 700;
+    font-size: 0.65rem;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+}
+
+.flash-left p { color: #ccc; font-size: 0.75rem; }
+.flash-left strong { color: #D4AF37; }
+
+.flash-timer { display: flex; align-items: center; gap: 3px; }
+
+.time-block {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 4px;
+    padding: 3px 6px;
+    text-align: center;
+    min-width: 36px;
+}
+
+.time-block span { display: block; font-size: 0.9rem; font-weight: 700; color: #D4AF37; line-height: 1; }
+.time-block small { font-size: 0.55rem; color: #666; }
+.colon { color: #D4AF37; font-size: 0.9rem; font-weight: 700; }
+
+.flash-btn { padding: 5px 12px; font-size: 0.7rem; width: auto; white-space: nowrap; border-radius: 4px; }
