@@ -9,9 +9,9 @@ const Recommendations = ({ currentProductId, category }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`http://localhost:5000/products?category=${category}`)
+        fetch('/products.json')
             .then(r => r.json())
-            .then(data => setProducts(data.filter(p => p.id !== currentProductId).slice(0, 4)));
+            .then(data => setProducts(data.filter(p => p.category === category && p.id !== currentProductId).slice(0, 4)));
     }, [currentProductId, category]);
 
     if (!products.length) return null;

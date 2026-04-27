@@ -6,17 +6,165 @@ import '../styles/Payment.css';
 
 const Payment = () => {
     const { cart, cartTotal, formatPrice, clearCart } = useCart();
-    const { token, isAuthenticated } = useAuth();
+    const { token, isAuthenticated, user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const shippingAddress = location.state?.shippingAddress || {};
     
-    const [paymentMethod, setPaymentMethod] = useState('card');
-    const [cardDetails, setCardDetails] = useState({ cardNumber: '', cardName: '', expiry: '', cvv: '' });
+    const [paymentMethod, setPaymentMethod] = useState('razorpay');
     const [processing, setProcessing] = useState(false);
 
-    const handlePayment = async (e) => {
-        e.preventDefault();
+    // Load Razorpay script
+    const loadRazorpayScript = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
+    // Handle Razorpay Payment
+    const handleRazorpayPayment = async () => {
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
+
+        setProcessing(true);
+
+        try {
+            // Load Razorpay script
+            const scriptLoaded = await loadRazorpayScript();
+            if (!scriptLoaded) {
+                alert('Failed to load Razorpay SDK. Please try again.');
+                setProcessing(false);
+                return;
+            }
+
+            const API_URL = import.meta.env.VITE_API_URL || 'https://trendytreasureee-2.onrender.com';
+
+            // Create order on backend
+            const orderResponse = await fetch(`${API_URL}/api/create-order`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    amount: Math.round(cartTotal * 100), // Convert to paise
+                    currency: 'INR',
+                    receipt: `receipt_${Date.now()}`
+                })
+            });
+
+            if (!orderResponse.ok) {
+                const errorText = await orderResponse.text();
+                let errorMessage = 'Failed to create order';
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.error || errorJson.message || errorMessage;
+                } catch (e) {
+                    errorMessage = errorText || errorMessage;
+                }
+                throw new Error(errorMessage);
+            }
+
+            const orderData = await orderResponse.json();
+
+            if (!orderData.success) {
+                throw new Error(orderData.message || 'Failed to create order');
+            }
+
+            // Configure Razorpay options
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_SiVsQ4K6JZo4gk',
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: 'TrendyTreasure',
+                description: 'Purchase from TrendyTreasure',
+                order_id: orderData.order_id,
+                handler: async function (response) {
+                    try {
+                        // Verify payment on backend
+                        const verifyResponse = await fetch(`${API_URL}/api/verify-payment`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature
+                            })
+                        });
+
+                        if (!verifyResponse.ok) {
+                            const errorText = await verifyResponse.text();
+                            let errorMessage = 'Payment verification failed';
+                            try {
+                                const errorJson = JSON.parse(errorText);
+                                errorMessage = errorJson.error || errorJson.message || errorMessage;
+                            } catch (e) {
+                                errorMessage = errorText || errorMessage;
+                            }
+                            throw new Error(errorMessage);
+                        }
+
+                        const verifyData = await verifyResponse.json();
+
+                        if (verifyData.success) {
+                            // Payment successful
+                            clearCart();
+                            navigate('/order-confirmation', {
+                                state: {
+                                    orderData: {
+                                        orderId: response.razorpay_order_id,
+                                        paymentId: response.razorpay_payment_id,
+                                        totalAmount: cartTotal,
+                                        paymentMethod: 'Razorpay',
+                                        shippingAddress
+                                    }
+                                }
+                            });
+                        } else {
+                            throw new Error(verifyData.message || 'Payment verification failed');
+                        }
+                    } catch (error) {
+                        console.error('Payment verification error:', error);
+                        alert('Payment verification failed. Please contact support.');
+                    }
+                },
+                prefill: {
+                    name: user?.name || '',
+                    email: user?.email || '',
+                    contact: shippingAddress.phone || ''
+                },
+                notes: {
+                    address: `${shippingAddress.address}, ${shippingAddress.city}, ${shippingAddress.postalCode}`
+                },
+                theme: {
+                    color: '#D4AF37'
+                },
+                modal: {
+                    ondismiss: function() {
+                        setProcessing(false);
+                    }
+                }
+            };
+
+            const razorpay = new window.Razorpay(options);
+            razorpay.open();
+
+        } catch (error) {
+            console.error('Payment error:', error);
+            alert(error.message || 'Payment failed. Please try again.');
+            setProcessing(false);
+        }
+    };
+
+    // Handle Cash on Delivery
+    const handleCODPayment = async () => {
         if (!isAuthenticated) {
             navigate('/login');
             return;
@@ -24,41 +172,30 @@ const Payment = () => {
         
         setProcessing(true);
         
-        // Simulate payment processing
-        setTimeout(async () => {
-            try {
-                const response = await fetch('http://localhost:5000/orders', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ 
-                        items: cart, 
-                        shippingAddress, 
+        // Simulate COD order creation
+        setTimeout(() => {
+            clearCart();
+            navigate('/order-confirmation', { 
+                state: { 
+                    orderData: {
+                        orderId: 'COD_' + Date.now(),
                         totalAmount: cartTotal,
-                        paymentMethod,
-                        paymentDetails: { last4: cardDetails.cardNumber.slice(-4) }
-                    })
-                });
-                
-                if (response.ok) {
-                    const order = await response.json();
-                    clearCart();
-                    navigate('/order-confirmation', { 
-                        state: { 
-                            orderData: {
-                                orderId: order.id,
-                                totalAmount: cartTotal,
-                                paymentMethod: paymentMethod === 'card' ? 'Credit/Debit Card' : paymentMethod === 'upi' ? 'UPI' : 'Cash on Delivery',
-                                shippingAddress
-                            }
-                        }
-                    });
+                        paymentMethod: 'Cash on Delivery',
+                        shippingAddress
+                    }
                 }
-            } catch (err) {
-                alert('Payment failed. Please try again.');
-            } finally {
-                setProcessing(false);
-            }
-        }, 2000);
+            });
+        }, 1000);
+    };
+
+    const handlePayment = (e) => {
+        e.preventDefault();
+        
+        if (paymentMethod === 'razorpay') {
+            handleRazorpayPayment();
+        } else if (paymentMethod === 'cod') {
+            handleCODPayment();
+        }
     };
 
     if (!cart.length) {
@@ -73,38 +210,38 @@ const Payment = () => {
                     <form className="payment-form" onSubmit={handlePayment}>
                         <h3>Select Payment Method</h3>
                         <div className="payment-methods">
-                            <div className={`payment-method ${paymentMethod === 'card' ? 'active' : ''}`} onClick={() => setPaymentMethod('card')}>
-                                <h4>Credit/Debit Card</h4>
-                            </div>
-                            <div className={`payment-method ${paymentMethod === 'upi' ? 'active' : ''}`} onClick={() => setPaymentMethod('upi')}>
-                                <h4>UPI</h4>
+                            <div className={`payment-method ${paymentMethod === 'razorpay' ? 'active' : ''}`} onClick={() => setPaymentMethod('razorpay')}>
+                                <h4>💳 Pay with Razorpay</h4>
+                                <p>Credit/Debit Card, UPI, Net Banking, Wallets</p>
                             </div>
                             <div className={`payment-method ${paymentMethod === 'cod' ? 'active' : ''}`} onClick={() => setPaymentMethod('cod')}>
-                                <h4>Cash on Delivery</h4>
+                                <h4>💵 Cash on Delivery</h4>
+                                <p>Pay when your order is delivered</p>
                             </div>
                         </div>
 
-                        {paymentMethod === 'card' && (
-                            <div className="card-details">
-                                <input type="text" placeholder="Card Number" value={cardDetails.cardNumber} onChange={(e) => setCardDetails({...cardDetails, cardNumber: e.target.value})} maxLength="16" required />
-                                <input type="text" placeholder="Cardholder Name" value={cardDetails.cardName} onChange={(e) => setCardDetails({...cardDetails, cardName: e.target.value})} required />
-                                <div className="card-row">
-                                    <input type="text" placeholder="MM/YY" value={cardDetails.expiry} onChange={(e) => setCardDetails({...cardDetails, expiry: e.target.value})} maxLength="5" required />
-                                    <input type="text" placeholder="CVV" value={cardDetails.cvv} onChange={(e) => setCardDetails({...cardDetails, cvv: e.target.value})} maxLength="3" required />
-                                </div>
+                        {paymentMethod === 'razorpay' && (
+                            <div className="razorpay-info">
+                                <p style={{color: 'var(--light-gray)', padding: '20px', textAlign: 'center'}}>
+                                    🔒 Secure payment powered by Razorpay<br/>
+                                    Supports all major cards, UPI, and wallets
+                                </p>
                             </div>
                         )}
 
-                        {paymentMethod === 'upi' && (
-                            <input type="text" placeholder="UPI ID (e.g., user@paytm)" required />
-                        )}
-
                         {paymentMethod === 'cod' && (
-                            <p style={{color: 'var(--color-text-secondary)', padding: '20px'}}>Pay with cash when your order is delivered.</p>
+                            <p style={{color: 'var(--light-gray)', padding: '20px', textAlign: 'center'}}>
+                                💵 Pay with cash when your order is delivered.<br/>
+                                Additional charges may apply.
+                            </p>
                         )}
 
                         <button type="submit" className="btn-primary" disabled={processing} style={{marginTop: '30px'}}>
-                            {processing ? 'Processing...' : `Pay ${formatPrice(cartTotal)}`}
+                            {processing ? (
+                                paymentMethod === 'razorpay' ? 'Opening Razorpay...' : 'Processing...'
+                            ) : (
+                                paymentMethod === 'razorpay' ? `Pay ${formatPrice(cartTotal)} with Razorpay` : `Place Order - ${formatPrice(cartTotal)}`
+                            )}
                         </button>
                     </form>
 

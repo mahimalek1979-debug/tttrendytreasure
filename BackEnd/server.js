@@ -1,11 +1,13 @@
 const http = require('http');
 const url = require('url');
+require('dotenv').config();
 const { sendError, sendJSON } = require('./utils/responseHelper');
 const { registerUser, loginUser, getAllUsers } = require('./utils/userController');
 const { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct } = require('./utils/productController');
 const { addToCart, getCart } = require('./utils/cartController');
 const { createOrder, getOrders } = require('./utils/orderController');
 const { verifyToken } = require('./utils/authHelper');
+const { createOrder: createRazorpayOrder, verifyPayment } = require('./utils/razorpayController');
 
 const PORT = 5000;
 
@@ -36,26 +38,29 @@ const server = http.createServer((req, res) => {
         return verifyToken(token);
     };
 
+    const normalizedPath = path.toLowerCase().replace(/\/$/, '');
+    const normalizedMethod = method.toUpperCase();
+
     // Route: /register
-    if (path === '/register' && method === 'POST') {
+    if (normalizedPath === '/register' && normalizedMethod === 'POST') {
         return registerUser(req, res);
     }
 
     // Route: /login
-    if (path === '/login' && method === 'POST') {
+    if (normalizedPath === '/login' && normalizedMethod === 'POST') {
         return loginUser(req, res);
     }
 
     // Route: /users
-    if (path === '/users' && method === 'GET') {
-        req.user = authenticate(req); // Optional auth for listing users
+    if (normalizedPath === '/users' && normalizedMethod === 'GET') {
+        req.user = authenticate(req);
         return getAllUsers(req, res);
     }
 
     // Route: /products
-    if (path === '/products') {
-        if (method === 'GET') return getAllProducts(req, res);
-        if (method === 'POST') {
+    if (normalizedPath === '/products') {
+        if (normalizedMethod === 'GET') return getAllProducts(req, res);
+        if (normalizedMethod === 'POST') {
             req.user = authenticate(req);
             if (!req.user) return sendError(res, 401, 'Unauthorized');
             return createProduct(req, res);
@@ -63,16 +68,16 @@ const server = http.createServer((req, res) => {
     }
 
     // Route: /products/:id
-    if (path.startsWith('/products/')) {
-        const id = path.split('/')[2];
+    if (normalizedPath.startsWith('/products/')) {
+        const id = normalizedPath.split('/')[2];
         if (id) {
-            if (method === 'GET') return getProductById(req, res, id);
-            if (method === 'PUT') {
+            if (normalizedMethod === 'GET') return getProductById(req, res, id);
+            if (normalizedMethod === 'PUT') {
                 req.user = authenticate(req);
                 if (!req.user) return sendError(res, 401, 'Unauthorized');
                 return updateProduct(req, res, id);
             }
-            if (method === 'DELETE') {
+            if (normalizedMethod === 'DELETE') {
                 req.user = authenticate(req);
                 if (!req.user) return sendError(res, 401, 'Unauthorized');
                 return deleteProduct(req, res, id);
@@ -81,25 +86,35 @@ const server = http.createServer((req, res) => {
     }
 
     // Route: /cart
-    if (path === '/cart') {
+    if (normalizedPath === '/cart') {
         req.user = authenticate(req);
         if (!req.user) return sendError(res, 401, 'Unauthorized');
 
-        if (method === 'GET') return getCart(req, res);
-        if (method === 'POST') return addToCart(req, res);
+        if (normalizedMethod === 'GET') return getCart(req, res);
+        if (normalizedMethod === 'POST') return addToCart(req, res);
     }
 
     // Route: /orders
-    if (path === '/orders') {
+    if (normalizedPath === '/orders') {
         req.user = authenticate(req);
         if (!req.user) return sendError(res, 401, 'Unauthorized');
 
-        if (method === 'GET') return getOrders(req, res);
-        if (method === 'POST') return createOrder(req, res);
+        if (normalizedMethod === 'GET') return getOrders(req, res);
+        if (normalizedMethod === 'POST') return createOrder(req, res);
+    }
+
+    // Route: /api/create-order (Razorpay)
+    if ((normalizedPath === '/api/create-order' || normalizedPath === '/create-order') && normalizedMethod === 'POST') {
+        return createRazorpayOrder(req, res);
+    }
+
+    // Route: /api/verify-payment (Razorpay)
+    if ((normalizedPath === '/api/verify-payment' || normalizedPath === '/verify-payment') && normalizedMethod === 'POST') {
+        return verifyPayment(req, res);
     }
 
     // 404 Route Not Found
-    sendError(res, 404, 'Route not found');
+    sendError(res, 404, `Route ${normalizedMethod} ${normalizedPath} not found`);
 });
 
 server.listen(PORT, () => {

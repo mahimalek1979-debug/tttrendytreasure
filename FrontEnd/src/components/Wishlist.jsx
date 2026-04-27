@@ -16,8 +16,12 @@ const Wishlist = () => {
             return;
         }
         const saved = JSON.parse(localStorage.getItem('wishlist') || '[]');
-        Promise.all(saved.map(id => fetch(`http://localhost:5000/products/${id}`).then(r => r.json())))
-            .then(products => setWishlist(products.filter(p => p.id)));
+        fetch('/products.json')
+            .then(r => r.json())
+            .then(allProducts => {
+                const wishlistProducts = saved.map(id => allProducts.find(p => p.id === id)).filter(p => p);
+                setWishlist(wishlistProducts);
+            });
     }, [isAuthenticated, navigate]);
 
     const removeFromWishlist = (id) => {

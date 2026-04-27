@@ -13,6 +13,13 @@
   --font-body: 'Lato', sans-serif;
   --radius: 12px;
   --radius-sm: 8px;
+
+  /* aliases for legacy CSS files */
+  --color-gold: #D4AF37;
+  --color-black: #0a0a0a;
+  --color-card-bg: #141414;
+  --color-white: #ffffff;
+  --color-text-secondary: #cccccc;
 }
 
 * {
@@ -89,6 +96,24 @@ button { cursor: pointer; border: none; font-family: var(--font-body); }
 }
 
 .btn-gold:active { transform: scale(0.97); opacity: 0.9; }
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--black);
+  padding: 13px 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-radius: var(--radius-sm);
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.btn-primary:active { transform: scale(0.97); opacity: 0.9; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .btn-outline {
   background: transparent;

@@ -7,10 +7,16 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": ["ecommerce", "api", "nodejs"],
+  "keywords": [
+    "ecommerce",
+    "api",
+    "nodejs"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "jsonwebtoken": "^9.0.2"
+    "dotenv": "^17.4.2",
+    "jsonwebtoken": "^9.0.2",
+    "razorpay": "^2.9.6"
   }
 }

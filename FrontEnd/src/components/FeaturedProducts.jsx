@@ -24,15 +24,30 @@ const FeaturedProducts = () => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
+                const res = await fetch('/products.json');
+                const data = await res.json();
+                
+                // Apply search and category filters locally
                 const params = new URLSearchParams(location.search);
                 const search = params.get('search') || '';
                 const category = params.get('category') || '';
-                let url = `http://localhost:5000/products?`;
-                if (search) url += `search=${encodeURIComponent(search)}&`;
-                if (category) url += `category=${encodeURIComponent(category)}`;
-                const res = await fetch(url);
-                const data = await res.json();
-                setProducts(data);
+                
+                let filteredData = data;
+                
+                if (search) {
+                    filteredData = filteredData.filter(product => 
+                        product.name.toLowerCase().includes(search.toLowerCase()) ||
+                        product.description.toLowerCase().includes(search.toLowerCase())
+                    );
+                }
+                
+                if (category) {
+                    filteredData = filteredData.filter(product => 
+                        product.category.toLowerCase() === category.toLowerCase()
+                    );
+                }
+                
+                setProducts(filteredData);
             } catch (e) {
                 console.error(e);
             } finally {

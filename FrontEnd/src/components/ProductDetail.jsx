@@ -17,10 +17,11 @@ const ProductDetail = () => {
     const [selectedVariant, setSelectedVariant] = useState(null);
 
     useEffect(() => {
-        fetch(`http://localhost:5000/products/${id}`)
+        fetch('/products.json')
             .then(res => res.json())
             .then(data => {
-                setProduct(data);
+                const product = data.find(p => p.id === id);
+                setProduct(product);
                 if (data.variants && data.variants.length > 0) {
                     setSelectedVariant(data.variants[0]);
                 }

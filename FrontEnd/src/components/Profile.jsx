@@ -12,11 +12,26 @@ const Profile = () => {
     const [activeTab, setActiveTab] = useState('orders');
 
     useEffect(() => {
-        fetch('http://localhost:5000/orders', {
-            headers: { 'Authorization': `Bearer ${token}` }
-        })
+        fetch('/products.json')
             .then(r => r.json())
-            .then(setOrders)
+            .then(data => {
+                // Simulate user orders
+                const mockOrders = [
+                    {
+                        id: 'order_1',
+                        status: 'Delivered',
+                        totalAmount: 2500,
+                        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    {
+                        id: 'order_2', 
+                        status: 'Shipped',
+                        totalAmount: 1800,
+                        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+                    }
+                ];
+                setOrders(mockOrders);
+            })
             .catch(() => {});
     }, [token]);
 

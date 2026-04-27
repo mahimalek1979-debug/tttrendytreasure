@@ -16,8 +16,9 @@
     right: -100%;
     width: 100%;
     height: 100vh;
-    background: var(--color-card-bg);
+    background: var(--card-bg);
     z-index: 1000;
+    color: var(--white);
     display: flex;
     flex-direction: column;
     transition: right 0.3s;
@@ -35,7 +36,7 @@
 
 .close-btn {
     background: transparent;
-    color: var(--color-gold);
+    color: var(--gold);
     font-size: 2rem;
     padding: 0;
     line-height: 1;
@@ -49,7 +50,7 @@
 
 .empty-cart {
     text-align: center;
-    color: var(--color-text-secondary);
+    color: var(--light-gray);
     padding: 50px 20px;
 }
 
@@ -74,7 +75,7 @@
 .item-details h4 {
     font-size: 0.9rem;
     margin-bottom: 4px;
-    color: var(--color-white);
+    color: var(--white);
     font-family: var(--font-body);
     white-space: nowrap;
     overflow: hidden;
@@ -82,7 +83,7 @@
 }
 
 .item-price {
-    color: var(--color-gold);
+    color: var(--gold);
     font-weight: 700;
     font-size: 0.95rem;
 }
@@ -94,11 +95,22 @@
     margin-top: 8px;
 }
 
+.quantity-controls span {
+    color: var(--white);
+    font-size: 0.95rem;
+}
+
+.item-variant {
+    color: var(--light-gray);
+    font-size: 0.8rem;
+    margin-bottom: 2px;
+}
+
 .quantity-controls button {
     width: 28px;
     height: 28px;
-    background: var(--color-gold);
-    color: var(--color-black);
+    background: var(--gold);
+    color: var(--black);
     border-radius: 3px;
     font-weight: 700;
     font-size: 1rem;
@@ -122,15 +134,16 @@
     justify-content: space-between;
     margin-bottom: 15px;
     font-size: 1.1rem;
+    color: var(--white);
 }
 
-.total-amount { color: var(--color-gold); font-weight: 700; }
+.total-amount { color: var(--gold); font-weight: 700; }
 
 .checkout-btn {
     width: 100%;
     padding: 15px;
-    background: var(--color-gold);
-    color: var(--color-black);
+    background: var(--gold);
+    color: var(--black);
     font-weight: 700;
     text-transform: uppercase;
     border-radius: 5px;

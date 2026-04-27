@@ -12,30 +12,34 @@ const Admin = () => {
 
     useEffect(() => {
         if (!token) navigate('/login');
-        fetch('http://localhost:5000/products').then(r => r.json()).then(setProducts);
-        fetch('http://localhost:5000/orders', { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()).then(setOrders).catch(() => {});
+        fetch('/products.json').then(r => r.json()).then(setProducts);
+        // Mock orders data for admin
+        const mockOrders = [
+            { id: 'order_1', totalAmount: 2500, status: 'Delivered' },
+            { id: 'order_2', totalAmount: 1800, status: 'Shipped' },
+            { id: 'order_3', totalAmount: 3200, status: 'Processing' }
+        ];
+        setOrders(mockOrders);
     }, [token, navigate]);
 
     const addProduct = async (e) => {
         e.preventDefault();
-        const res = await fetch('http://localhost:5000/products', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ ...newProduct, price: Number(newProduct.price), stock: Number(newProduct.stock) })
-        });
-        if (res.ok) {
-            const product = await res.json();
-            setProducts([...products, product]);
-            setNewProduct({ name: '', description: '', price: '', category: '', imageUrl: '', stock: '' });
-        }
+        // Mock product addition for demo
+        const mockProduct = { 
+            id: 'product_' + Date.now(), 
+            ...newProduct, 
+            price: Number(newProduct.price), 
+            stock: Number(newProduct.stock) 
+        };
+        setProducts([...products, mockProduct]);
+        setNewProduct({ name: '', description: '', price: '', category: '', imageUrl: '', stock: '' });
+        alert('Product added successfully (demo mode)');
     };
 
     const deleteProduct = async (id) => {
-        const res = await fetch(`http://localhost:5000/products/${id}`, {
-            method: 'DELETE',
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        if (res.ok) setProducts(products.filter(p => p.id !== id));
+        // Mock product deletion for demo
+        setProducts(products.filter(p => p.id !== id));
+        alert('Product deleted successfully (demo mode)');
     };
 
     return (

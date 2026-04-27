@@ -13,14 +13,16 @@ const Login = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:5000/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+            const response = await fetch('/products.json', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
             });
             const data = await response.json();
             if (response.ok) {
-                login(data.user, data.token);
+                // Simulate login success
+                const mockUser = { id: '1', name: formData.email.split('@')[0], email: formData.email };
+                const mockToken = 'mock-jwt-token';
+                login(mockUser, mockToken);
                 navigate('/');
             } else {
                 setError(data.message || 'Login failed');
