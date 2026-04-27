@@ -9,7 +9,7 @@ const { createOrder, getOrders } = require('./utils/orderController');
 const { verifyToken } = require('./utils/authHelper');
 const { createOrder: createRazorpayOrder, verifyPayment } = require('./utils/razorpayController');
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 const server = http.createServer((req, res) => {
     // CORS Headers
