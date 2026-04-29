@@ -16,13 +16,14 @@ const getRequestBody = (req) => {
         });
         req.on('end', () => {
             try {
-                if (!body) {
+                const trimmed = body.trim();
+                if (!trimmed) {
                     resolve({});
                 } else {
-                    resolve(JSON.parse(body));
+                    resolve(JSON.parse(trimmed));
                 }
             } catch (error) {
-                reject(new Error('Invalid JSON'));
+                reject(new Error('Invalid JSON in request body'));
             }
         });
         req.on('error', (err) => {

@@ -11,19 +11,19 @@ const Signup = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('/products.json', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
+            const response = await fetch('http://localhost:5000/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: formData.name, email: formData.email, password: formData.password })
             });
             const data = await response.json();
             if (response.ok) {
-                // Simulate registration success
                 navigate('/login');
             } else {
-                setError(data.message || 'Registration failed');
+                setError(data.error || 'Registration failed');
             }
         } catch (err) {
-            setError(err.message || 'Server error. Please try again.');
+            setError('Server error. Please try again.');
         }
     };
 

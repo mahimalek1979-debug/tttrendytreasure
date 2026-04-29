@@ -14,9 +14,10 @@ const Payment = () => {
     const [paymentMethod, setPaymentMethod] = useState('razorpay');
     const [processing, setProcessing] = useState(false);
 
-    // Load Razorpay script
+    // Load Razorpay script (skip if already loaded)
     const loadRazorpayScript = () => {
         return new Promise((resolve) => {
+            if (window.Razorpay) return resolve(true);
             const script = document.createElement('script');
             script.src = 'https://checkout.razorpay.com/v1/checkout.js';
             script.onload = () => resolve(true);
@@ -43,10 +44,10 @@ const Payment = () => {
                 return;
             }
 
-            const API_URL = import.meta.env.VITE_API_URL || 'https://trendytreasureee-2.onrender.com';
+            const API_URL = '/.netlify/functions';
 
             // Create order on backend
-            const orderResponse = await fetch(`${API_URL}/api/create-order`, {
+            const orderResponse = await fetch(`${API_URL}/create-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,19 +59,25 @@ const Payment = () => {
                 })
             });
 
+            const responseText = await orderResponse.text();
+            
             if (!orderResponse.ok) {
-                const errorText = await orderResponse.text();
                 let errorMessage = 'Failed to create order';
                 try {
-                    const errorJson = JSON.parse(errorText);
+                    const errorJson = JSON.parse(responseText);
                     errorMessage = errorJson.error || errorJson.message || errorMessage;
                 } catch (e) {
-                    errorMessage = errorText || errorMessage;
+                    errorMessage = `Server Error (${orderResponse.status}): ${responseText.substring(0, 100)}`;
                 }
                 throw new Error(errorMessage);
             }
 
-            const orderData = await orderResponse.json();
+            let orderData;
+            try {
+                orderData = JSON.parse(responseText);
+            } catch (e) {
+                throw new Error(`Invalid response from server. Status: ${orderResponse.status}. Content: ${responseText.substring(0, 100)}`);
+            }
 
             if (!orderData.success) {
                 throw new Error(orderData.message || 'Failed to create order');
@@ -78,7 +85,7 @@ const Payment = () => {
 
             // Configure Razorpay options
             const options = {
-                key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_SiVsQ4K6JZo4gk',
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID,
                 amount: orderData.amount,
                 currency: orderData.currency,
                 name: 'TrendyTreasure',
@@ -87,7 +94,7 @@ const Payment = () => {
                 handler: async function (response) {
                     try {
                         // Verify payment on backend
-                        const verifyResponse = await fetch(`${API_URL}/api/verify-payment`, {
+                        const verifyResponse = await fetch(`${API_URL}/verify-payment`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -99,19 +106,25 @@ const Payment = () => {
                             })
                         });
 
+                        const verifyText = await verifyResponse.text();
+
                         if (!verifyResponse.ok) {
-                            const errorText = await verifyResponse.text();
                             let errorMessage = 'Payment verification failed';
                             try {
-                                const errorJson = JSON.parse(errorText);
+                                const errorJson = JSON.parse(verifyText);
                                 errorMessage = errorJson.error || errorJson.message || errorMessage;
                             } catch (e) {
-                                errorMessage = errorText || errorMessage;
+                                errorMessage = `Verification Error (${verifyResponse.status}): ${verifyText.substring(0, 100)}`;
                             }
                             throw new Error(errorMessage);
                         }
 
-                        const verifyData = await verifyResponse.json();
+                        let verifyData;
+                        try {
+                            verifyData = JSON.parse(verifyText);
+                        } catch (e) {
+                            throw new Error(`Invalid verification response. Status: ${verifyResponse.status}. Content: ${verifyText.substring(0, 100)}`);
+                        }
 
                         if (verifyData.success) {
                             // Payment successful
@@ -132,7 +145,7 @@ const Payment = () => {
                         }
                     } catch (error) {
                         console.error('Payment verification error:', error);
-                        alert('Payment verification failed. Please contact support.');
+                        alert(error.message || 'Payment verification failed. Please contact support.');
                     }
                 },
                 prefill: {
@@ -154,6 +167,10 @@ const Payment = () => {
             };
 
             const razorpay = new window.Razorpay(options);
+            razorpay.on('payment.failed', function (response) {
+                alert(`Payment failed: ${response.error.description}`);
+                setProcessing(false);
+            });
             razorpay.open();
 
         } catch (error) {

@@ -17,9 +17,11 @@ const readData = async (fileName) => {
     try {
         const filePath = path.join(dataDir, fileName);
         const data = await fs.readFile(filePath, 'utf8');
-        return JSON.parse(data);
+        const trimmed = data.trim();
+        if (!trimmed) return [];
+        return JSON.parse(trimmed);
     } catch (error) {
-        if (error.code === 'ENOENT') {
+        if (error.code === 'ENOENT' || error instanceof SyntaxError) {
             return [];
         }
         throw error;
@@ -29,15 +31,18 @@ const readData = async (fileName) => {
 const writeData = async (fileName, content) => {
     const lock = getLock(fileName);
     const newLock = lock.then(async () => {
+        const filePath = path.join(dataDir, fileName);
+        const tmpPath = filePath + '.tmp';
         try {
-            const filePath = path.join(dataDir, fileName);
-            await fs.writeFile(filePath, JSON.stringify(content, null, 2), 'utf8');
+            await fs.writeFile(tmpPath, JSON.stringify(content, null, 2), 'utf8');
+            await fs.rename(tmpPath, filePath);
         } catch (error) {
             console.error(`Error writing to ${fileName}:`, error);
+            try { await fs.unlink(tmpPath); } catch (_) {}
             throw error;
         }
     });
-    locks[fileName] = newLock; // Update the lock chain
+    locks[fileName] = newLock;
     return newLock;
 };
 

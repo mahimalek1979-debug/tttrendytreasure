@@ -13,22 +13,20 @@ const Login = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('/products.json', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
+            const response = await fetch('http://localhost:5000/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: formData.email, password: formData.password })
             });
             const data = await response.json();
             if (response.ok) {
-                // Simulate login success
-                const mockUser = { id: '1', name: formData.email.split('@')[0], email: formData.email };
-                const mockToken = 'mock-jwt-token';
-                login(mockUser, mockToken);
+                login(data.user, data.token);
                 navigate('/');
             } else {
-                setError(data.message || 'Login failed');
+                setError(data.error || 'Login failed');
             }
         } catch (err) {
-            setError(err.message || 'Server error. Please try again.');
+            setError('Server error. Please try again.');
         }
     };
 

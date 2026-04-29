@@ -12,6 +12,9 @@ const { createOrder: createRazorpayOrder, verifyPayment } = require('./utils/raz
 const PORT = process.env.PORT || 5000;
 
 const server = http.createServer((req, res) => {
+    // Logging incoming requests
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+
     // CORS Headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -111,6 +114,11 @@ const server = http.createServer((req, res) => {
     // Route: /api/verify-payment (Razorpay)
     if ((normalizedPath === '/api/verify-payment' || normalizedPath === '/verify-payment') && normalizedMethod === 'POST') {
         return verifyPayment(req, res);
+    }
+
+    // Health Check
+    if (normalizedPath === '/api/health' || normalizedPath === '/health') {
+        return sendJSON(res, 200, { status: 'ok', time: new Date().toISOString() });
     }
 
     // 404 Route Not Found
